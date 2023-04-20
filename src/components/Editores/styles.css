@@ -1,0 +1,57 @@
+.CodeMirrorEditor {
+  width: 100%;
+  height: 500px;
+  margin-left: 25px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.editores {
+  font-size: 16px;
+  color: #333;
+  width: 1250px;
+  padding-top: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.editores textarea {
+  width: 100%;
+  height: 500px;
+  margin-left: 25px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.boton-container {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.boton-container button {
+  margin-left: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+  background-color: rgb(203, 201, 201);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
