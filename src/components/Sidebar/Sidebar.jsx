@@ -127,12 +127,12 @@ const linksArray = [
         to: "/Editor",
         notification: 0,
     },
-    {
+    /*{
         label: "Compilador",
         icon: <BsPeople />,
         to: "/Compiler",
         notification: 0,
-    },
+    },*/
     {
         label: "Reportes",
         icon: <AiOutlineApartment />,
@@ -142,10 +142,10 @@ const linksArray = [
 ];
 
 const secondaryLinksArray = [
-    {
-        label: "Settings",
-        icon: <AiOutlineSetting />,
-    },
+    /*{
+        //label: "Settings",
+        //icon: <AiOutlineSetting />,
+    },*/
     {
         label: "Logout",
         icon: <MdLogout />,
