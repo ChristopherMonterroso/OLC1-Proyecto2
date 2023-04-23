@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import EditorPage from "./pages/EditorPage";
+import ReportPage from "./pages/ReportsPage";
 const Routes = () => {
     return (
         <Switch>
@@ -12,10 +13,10 @@ const Routes = () => {
                 <EditorPage />
             </Route>
             <Route exact path="/Compiler">
-                <h1>Compilador</h1>
+                 
             </Route>
             <Route exact path="/Reports">
-                <h1>Reportes</h1>
+                <ReportPage />
             </Route>
         </Switch>
     );

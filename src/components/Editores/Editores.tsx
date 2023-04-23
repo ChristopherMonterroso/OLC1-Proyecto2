@@ -3,6 +3,7 @@ import './styles.css';
 import { Analizador } from '../../Analizador/Analizador';
 import { AST } from '../../Entorno/AST';
 import { readFileSync } from "fs";
+import  {treeContent} from '../../Data/dataTree.js';
 function Editores() {
   
   const [editableText, setEditableText] = useState('');
@@ -27,13 +28,20 @@ function Editores() {
 
   //Funcion que ejecuta las instrucciones
   const handleExecute = () => {
+    treeContent.setContent('prueba');
     let cadena_codigo = editableText;
     let analizador = new Analizador(cadena_codigo, "editor");
    
     let ast: AST = analizador.Analizar();
     console.log(ast.getSalida());
-    
-   setNonEditableText(ast.getSalida());
+    //ast.printNodos();
+
+    if(ast != undefined) {
+      setNonEditableText(ast.getSalida());
+    }else{
+      setNonEditableText("Error al analizar");
+    }
+   
   };
   //Funcion para guardar el editable text en un archivo y descargarlo
   const handleSaveAs = () => {

@@ -14,12 +14,13 @@
     let OperacionRelacional         =   require("../Expresiones/OperacionRelacional").OperacionRelacional;
     let While                       =   require("../Instrucciones/While").While;
     let Valor                       =   require("../Expresiones/Valor").Valor;
+    let toLower                     =   require("../Instrucciones/toLower").toLower;
 %}
 /* description: Parses end executes mathematical expressions. */
 
 /* lexical grammar */
 %lex
-%options case-sensitive
+%options case-insensitive
 
 digit                       [0-9]
 cor1                        "["
@@ -47,10 +48,11 @@ frac                        (?:\.[0-9]+)
 "String"                        {   return 'tstring';   }
 "if"                            {   return 'tif';       }
 "while"                         {   return 'twhile';    }
+"do"                            {   return 'tdo';    }
 "else"                          {   return 'telse';     }
 "void"                          {   return 'tvoid';     }
 "return"                        {   return 'treturn';   }
-
+"toLower"                       {   return 'ttolower';   }
 /* =================== EXPRESIONES REGULARES ===================== */
 ([a-zA-ZÑñ]|("_"[a-zA-ZÑñ]))([a-zA-ZÑñ]|[0-9]|"_")*             yytext = yytext.toLowerCase();          return 'id';
 \"(?:[{cor1}|{cor2}]|["\\"]["bnrt/["\\"]]|[^"["\\"])*\"         yytext = yytext.substr(1,yyleng-2);     return 'cadena';
@@ -149,6 +151,7 @@ SENTENCIA :     DECLARACION ';'             { $$ = $1; }
             |   IF                          { $$ = $1; }
             |   LLAMADA_FUNCION  ';'        { $$ = $1; }
             |   WHILE                       { $$ = $1; }
+            |   DO              ';'         { $$ = $1; }
 ;
 
 DECLARACION : TIPO  id  '=' EXP 
@@ -159,6 +162,16 @@ DECLARACION : TIPO  id  '=' EXP
             {
                 $$ = new DeclararVariable($1, $2, undefined, @2.first_line, @2.first_column);
             }
+            | TIPO id '=' TOLOWER 
+            {
+               $$ = new DeclararVariable($1, $2, $4, @2.first_line, @2.first_column);
+            }
+;
+
+TOLOWER : ttolower '(' EXP ')'
+        {
+            $$ = new toLower($3, @1.first_line, @1.first_column );
+        }
 ;
 
 ASIGNACION  :    id '=' EXP ';'
@@ -192,6 +205,11 @@ ELSE    :   telse IF
 WHILE   : twhile '(' EXP ')' BLOQUE_SENTENCAS
         {
             $$ = new While($3, $5, @1.first_line, @1.first_column );
+        }
+;
+DO      : tdo BLOQUE_SENTENCAS twhile '(' EXP ')' 
+        {
+            $$ = new While($5, $2, @1.first_line, @1.first_column );
         }
 ;
 
@@ -247,13 +265,21 @@ LISTA_EXP : LISTA_EXP ',' EXP
         }
 ;
 
-LLAMADA_FUNCION     : id '(' LISTA_EXP ')' { $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column);    }
+LLAMADA_FUNCION     : id '(' LISTA_EXP ')' 
+                { 
+                    $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column);    
+                }
+                | id '(' ')'
+                {
+                    $$ = new LlamadaFuncion($1, [], @1.first_line, @1.first_column);
+                }
 ;
 
 EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '-' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '*' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '/' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
+    |   EXP '%' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   '-' EXP %prec negativo          { $$ = $2;}
     |   '(' EXP ')'                     { $$ = $2;}
     |   EXP '=='  EXP                   { $$ = new OperacionRelacional($1, $2, $3, @2.first_line, @2.first_column);}

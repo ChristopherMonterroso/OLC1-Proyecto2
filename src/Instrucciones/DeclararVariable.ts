@@ -21,7 +21,7 @@ export class DeclararVariable extends Instruccion{
     }
 
     public ejecutar(actual: Ambito, global: Ambito, ast: AST) {
-        
+        console.log(this.id);
         // Verificar que no exista variable
         console.log(actual.existeVariable(this.id));
         if( actual.existeVariable(this.id) ) {
@@ -50,6 +50,7 @@ export class DeclararVariable extends Instruccion{
         }
 
         let nueva_var = new Variable(this.tipo, this.id, res);
+        
         actual.insertarVariable(this.id,nueva_var);
 
     }
