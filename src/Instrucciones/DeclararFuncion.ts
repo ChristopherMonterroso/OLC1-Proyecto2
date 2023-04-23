@@ -37,7 +37,7 @@ export class DeclararFuncion extends Instruccion {
                         if ( sent2.nombre == sentencia.nombre )
                         {
                             sent2.ejecutar(actual, global, ast);
-                            sent2.parametros=this.parametros;
+                        
                         }
                     }
                 }
