@@ -19,6 +19,7 @@ export class DeclararFuncion extends Instruccion {
         this.nombre = nombre;
         this.parametros = parametros;
         this.sentencias = sentencias;
+        this.tipo=tipo;
     }
 
     public ejecutar(actual: Ambito, global: Ambito, ast: AST) {

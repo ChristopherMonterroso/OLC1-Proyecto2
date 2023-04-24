@@ -1,3 +1,4 @@
+
 import { Ambito } from "../Entorno/Ambito";
 import { AST } from "../Entorno/AST";
 import { Expresion } from "../Entorno/Expresion";
@@ -21,9 +22,9 @@ export class DeclararVariable extends Instruccion{
     }
 
     public ejecutar(actual: Ambito, global: Ambito, ast: AST) {
-        console.log(this.id);
+        // console.log(this.id);
         // Verificar que no exista variable
-        console.log(actual.existeVariable(this.id));
+        // console.log(actual.existeVariable(this.id));
         if( actual.existeVariable(this.id) ) {
             // * ERROR *
             throw new Error("Variable ya se encuentra definida en el entorno actual: " + this.linea + " , " + this.columna);

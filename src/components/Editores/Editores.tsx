@@ -28,7 +28,7 @@ function Editores() {
 
   //Funcion que ejecuta las instrucciones
   const handleExecute = () => {
-    treeContent.setContent('prueba');
+   
     let cadena_codigo = editableText;
     let analizador = new Analizador(cadena_codigo, "editor");
    
@@ -41,7 +41,7 @@ function Editores() {
     }else{
       setNonEditableText("Error al analizar");
     }
-   
+    console.log(treeContent.content)
   };
   //Funcion para guardar el editable text en un archivo y descargarlo
   const handleSaveAs = () => {
