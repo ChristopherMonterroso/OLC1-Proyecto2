@@ -178,6 +178,7 @@ ASIGNACION  :    id '=' EXP ';'
             {
                 $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
             }
+            
 ;
 
 IF      :   tif '(' EXP ')' BLOQUE_SENTENCAS
@@ -280,7 +281,7 @@ EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $
     |   EXP '*' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '/' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '%' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
-    |   '-' EXP %prec negativo          { $$ = $2;}
+    |   '-' EXP %prec negativo          { $$ = new OperacionAritmetica(new Valor(0, "integer", @1.first_line, @1.first_column), $1, $2, @2.first_line, @2.first_column);}
     |   '(' EXP ')'                     { $$ = $2;}
     |   EXP '=='  EXP                   { $$ = new OperacionRelacional($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '!='  EXP                   { $$ = new OperacionRelacional($1, $2, $3, @2.first_line, @2.first_column);}
@@ -292,7 +293,8 @@ EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $
     |   EXP '||'  EXP                   { $$ = new OperacionLogica($1, $2, $3, @2.first_line, @2.first_column);}
     |   id                              { $$ = new AccesoVariable($1, @1.first_line, @1.first_column);        }
     |   LLAMADA_FUNCION                 { $$ = $1; }
-    |   entero                          { $$ = new Valor($1, "integer", @1.first_line, @1.first_column);}
+    |   entero                          { $$ = new Valor($1, "integer", @1.first_line, @1.first_column); }
+
     |   decimal                         { $$ = new Valor($1, "double", @1.first_line, @1.first_column); }
     |   caracter                        { $$ = new Valor($1, "char", @1.first_line, @1.first_column);   }
     |   cadena                          { $$ = new Valor($1, "string", @1.first_line, @1.first_column); }

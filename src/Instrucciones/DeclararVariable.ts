@@ -32,6 +32,7 @@ export class DeclararVariable extends Instruccion{
 
         let res
         if(this.exp != undefined) {
+            console.log(actual)
             res = this.exp.getValor(actual, global, ast);
             if(this.tipo.getPrimitivo() != this.exp.tipo.getPrimitivo()) {
                 // * ERROR *
@@ -40,9 +41,9 @@ export class DeclararVariable extends Instruccion{
         } else 
         {
             if(this.tipo.getPrimitivo() === TipoPrimitivo.Integer){
-                res = 0;
+                res = -1;
             }else if(this.tipo.getPrimitivo() === TipoPrimitivo.Double){
-                res = 0.0;
+                res = -1.0;
             } else if(this.tipo.getPrimitivo() === TipoPrimitivo.String) {
                 res = "";
             } else if(this.tipo.getPrimitivo() === TipoPrimitivo.String) {

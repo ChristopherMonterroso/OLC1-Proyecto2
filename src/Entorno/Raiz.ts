@@ -130,8 +130,9 @@ export class Raiz {
         // console.log(nombre)
         // console.log(sentencia)
         if (nombre==="DeclararVariable"){
-
-            const DeclararVariable = VariablesTipo.find(variable => variable.id === sentencia.exp.tipo_valor);
+            console.log(sentencia);
+            if (sentencia.exp.constructor.name!="OperacionAritmetica"){
+                const DeclararVariable = VariablesTipo.find(variable => variable.id === sentencia.exp.tipo_valor);
 
             this.nodes += `S_DeclararVariable${idNode}[label="DeclararVariable" fillcolor="${this.fillcolor}" style=filled];\n`
             this.nodes += `S_DeclararVariable_tipo${idNode}[label="${DeclararVariable.tipo}" fillcolor="${this.fillcolor}" style=filled];\n`
@@ -147,6 +148,23 @@ export class Raiz {
             this.connections += `S_DeclararVariable${idNode} -> S_DeclararVariable_valor${idNode} [color="${this.color}"];\n`;
             this.connections += `S_DeclararVariable${idNode} -> S_DeclararVariable_ptcoma${idNode} [color="${this.color}"];\n`;
             this.idNode+=1;
+            }else{
+                this.nodes += `S_DeclararVariable${idNode}[label="DeclararVariable" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `${nodoPadre} -> S_DeclararVariable${idNode} [color="${this.color}"];\n`;
+                const clave: string = Object.keys(TipoPrimitivo).find(key => TipoPrimitivo[key] === sentencia.exp.tipo.tipo) || '';
+                this.nodes += `S_DeclararVariable_tipo${idNode}[label="${clave}" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_DeclararVariable${idNode} -> S_DeclararVariable_tipo${idNode} [color="${this.color}"];\n`;
+                this.nodes += `S_DeclararVariable_id${idNode}[label="${sentencia.id}" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_DeclararVariable${idNode} -> S_DeclararVariable_id${idNode} [color="${this.color}"];\n`;
+                this.nodes += `S_DeclararVariable_igual${idNode}[label="=" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_DeclararVariable${idNode} -> S_DeclararVariable_igual${idNode} [color="${this.color}"];\n`;
+                this.nodes += `S_DeclararVariable_valor${idNode}[label="-${sentencia.exp.exp2.valor}" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_DeclararVariable${idNode} -> S_DeclararVariable_valor${idNode} [color="${this.color}"];\n`;
+                this.nodes += `S_DeclararVariable_ptcoma${idNode}[label=";" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVariable${idNode} -> S_DeclararVariable_ptcoma${idNode} [color="${this.color}"];\n`;
+                this.idNode+=1;
+            }
+            
         }else if(nombre==="LlamadaFuncion"){
             this.nodes += `S_LlamadaFuncion${idNode}[label="LlamadaFuncion" fillcolor="${this.fillcolor}" style=filled];\n`
             this.nodes += `S_LlamadaFuncion_nombre${idNode}[label="${sentencia.nombre}" fillcolor="${this.fillcolor}" style=filled];\n`
