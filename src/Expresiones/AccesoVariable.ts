@@ -12,9 +12,8 @@ export class AccesoVariable extends Expresion{
     }
     
     public getValor(actual: Ambito, global: Ambito, ast: AST) {
-        console.log(this.nombreVar)
         let variable = actual.getVariable(this.nombreVar);
-        console.log(variable)
+
         
         if(variable === undefined) {
             // * ERROR *

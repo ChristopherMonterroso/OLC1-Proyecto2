@@ -25,7 +25,6 @@ import { JisonParser, JisonParserApi, StateType, SymbolsType, TerminalsType, Pro
     let Length                    =   require("../Instrucciones/Length").Length;
     let TypeOf                    =   require("../Instrucciones/TypeOf").TypeOf;
 
-
 export class ParserParser extends JisonParser implements JisonParserApi {
     $?: any;
 

@@ -22,6 +22,7 @@ export class DeclararVariable extends Instruccion{
     }
 
     public ejecutar(actual: Ambito, global: Ambito, ast: AST) {
+
         // console.log(this.id);
         // Verificar que no exista variable
         // console.log(actual.existeVariable(this.id));
@@ -33,10 +34,9 @@ export class DeclararVariable extends Instruccion{
         let res
         
         if(this.exp != undefined) {
-            console.log(this.exp)
-            console.log(this.tipo);
+
             res = this.exp.getValor(actual, global, ast);
-            console.log(res);
+
             if(this.tipo.getPrimitivo() != this.exp.tipo.getPrimitivo()) {
                 // * ERROR *
                 throw new Error("Tipo de variable declarada no es igual al tipo de la expresion: " + this.linea + " , " + this.columna);

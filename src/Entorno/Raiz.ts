@@ -25,13 +25,12 @@ export class Raiz {
 
     public ejecutar(ast: AST) {
         try {
-            let ambito_global: Ambito = new Ambito(undefined);
-            let ambito_actual: Ambito = ambito_global;
-            
+            let ambito_global = new Ambito(undefined);
+            let ambito_actual = new Ambito(ambito_global);
             this.ejecutarDeclaracionesVar(ambito_actual, ambito_global, ast);
-            this.ejecutarllamadasFunciones(ambito_actual, ambito_global, ast);
+            this.ejecutarDeclaracionesFunciones(ambito_actual, ambito_global, ast);
             
-
+  
             for (let x = 0; x < this.sentencias.length; x++) {
                 let sent = this.sentencias[x];
                 if (!(sent instanceof DeclararVariable) && !(sent instanceof DeclararFuncion)) {
@@ -41,7 +40,7 @@ export class Raiz {
             }
             //this.graphiz()
         } catch (ex) {
-            ast.escribirConsola("ERROR => ");
+            ast.escribirConsola("ERROR => "+ex.message);
             console.log(ex);
 
         }
@@ -54,44 +53,39 @@ export class Raiz {
             if (sent instanceof DeclararVariable) {
                 sent.ejecutar(actual, global, ast);
 
-                //console.log("Primitivo-> " + sent.id);
-                /* let node :{
-                    tipo: "variable",
-                    id: sent.id,
-                    value:sent.exp.getValor()
-                 }*/
-
             }
         }
     }
 
     private ejecutarDeclaracionesFunciones(actual: Ambito, global: Ambito, ast: AST) {
-
-
+       
         for (let x = 0; x < this.sentencias.length; x++) {
             let sent = this.sentencias[x];
             if (sent instanceof DeclararFuncion) {
                 sent.ejecutar(actual, global, ast);
+                
             }
         }
     }
+
+    //no se usa xd
     private ejecutarllamadasFunciones(actual: Ambito, global: Ambito, ast: AST) {
+        
         for (let x = 0; x < this.sentencias.length; x++) {
+
             let sent = this.sentencias[x];
+            
             if (sent instanceof LlamadaFuncion) {
-                //hacer aqui mismo la validacion del metodo que llamo
-                for (let i = 0; i < this.sentencias.length; i++) {
-                    let sent2 = this.sentencias[i];
+                sent.getValor(actual, global,   ast);
+               
+                //let lista =actual.getFuncion(sent.nombre).sentencias
                 
-                    if (sent2 instanceof DeclararFuncion) {
-                        if (sent2.nombre == sent.nombre) {
-                            
-                            sent2.ejecutar(actual, global, ast);
-                        }
-                    }
-                }
-
-
+                //if (lista instanceof Instruccion) lista.ejecutar(actual, global, ast)
+                //if (lista instanceof Expresion) lista.getValor(actual, global, ast);
+               // if(lista instanceof LlamadaFuncion){}
+                //console.log(sent)
+                //console.log(actual.getFuncion(sent.nombre).sentencias)
+                
             }
         }
     }

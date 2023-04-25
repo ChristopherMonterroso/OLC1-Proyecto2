@@ -23,7 +23,7 @@ export class Asignacion extends Instruccion {
         let variable = actual.getVariable(this.id);
         let funcion = actual.getFuncion(this.id);
        
-        console.log(variable)
+        console.log(actual)
         
         if(variable === undefined) {
             // * ERROR *
@@ -42,10 +42,11 @@ export class Asignacion extends Instruccion {
             return
         }
         let valor_asig = this.exp.getValor(actual, global, ast);
-
+        
         if(variable.getTipo().getPrimitivo() != this.exp.tipo.getPrimitivo()) {
             throw new Error("ERROR => El tipo del valor asignado no corresponde a la variable " + this.id);
         }
+
         variable.asignarValor(valor_asig);
 
     }
