@@ -27,7 +27,7 @@ export class Raiz {
         try {
             let ambito_global: Ambito = new Ambito(undefined);
             let ambito_actual: Ambito = ambito_global;
-
+            
             this.ejecutarDeclaracionesVar(ambito_actual, ambito_global, ast);
             this.ejecutarllamadasFunciones(ambito_actual, ambito_global, ast);
             
@@ -39,7 +39,7 @@ export class Raiz {
                     else if (sent instanceof Expresion) sent.getValor(ambito_actual, ambito_global, ast);
                 }
             }
-            this.graphiz()
+            //this.graphiz()
         } catch (ex) {
             ast.escribirConsola("ERROR => ");
             console.log(ex);

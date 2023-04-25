@@ -2,7 +2,7 @@ import { Ambito } from "../Entorno/Ambito";
 import { AST } from "../Entorno/AST";
 import { Expresion } from "../Entorno/Expresion";
 import { Print } from "../Instrucciones/Print";
-
+import { toLower } from "../Instrucciones/toLower";
 export class LlamadaFuncion extends Expresion {
     
     nombre  : string;
@@ -15,7 +15,8 @@ export class LlamadaFuncion extends Expresion {
     }
 
     public getValor(actual: Ambito, global: Ambito, ast: AST) {
-        
+        console.log(this.lista_exp);
+       
         switch(this.nombre) {
             case "print":
                 {
@@ -24,7 +25,8 @@ export class LlamadaFuncion extends Expresion {
                 }
             default:
                 {
-                    
+                    console.log(actual.anterior);
+                    console.log(this.lista_exp[0])
                 }
         }
     }

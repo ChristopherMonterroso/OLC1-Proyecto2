@@ -31,9 +31,12 @@ export class DeclararVariable extends Instruccion{
         }
 
         let res
+        
         if(this.exp != undefined) {
-            console.log(actual)
+            console.log(this.exp)
+            console.log(this.tipo);
             res = this.exp.getValor(actual, global, ast);
+            console.log(res);
             if(this.tipo.getPrimitivo() != this.exp.tipo.getPrimitivo()) {
                 // * ERROR *
                 throw new Error("Tipo de variable declarada no es igual al tipo de la expresion: " + this.linea + " , " + this.columna);
@@ -41,9 +44,9 @@ export class DeclararVariable extends Instruccion{
         } else 
         {
             if(this.tipo.getPrimitivo() === TipoPrimitivo.Integer){
-                res = -1;
+                res = 0;
             }else if(this.tipo.getPrimitivo() === TipoPrimitivo.Double){
-                res = -1.0;
+                res = 0.0;
             } else if(this.tipo.getPrimitivo() === TipoPrimitivo.String) {
                 res = "";
             } else if(this.tipo.getPrimitivo() === TipoPrimitivo.String) {

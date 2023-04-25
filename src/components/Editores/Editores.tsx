@@ -33,7 +33,7 @@ function Editores() {
     let analizador = new Analizador(cadena_codigo, "editor");
    
     let ast: AST = analizador.Analizar();
-    console.log(ast.getSalida());
+    //console.log(ast.getSalida());
     //ast.printNodos();
 
     if(ast != undefined) {
@@ -41,7 +41,7 @@ function Editores() {
     }else{
       setNonEditableText("Error al analizar");
     }
-    console.log(treeContent.content)
+    //console.log(treeContent.content)
   };
   //Funcion para guardar el editable text en un archivo y descargarlo
   const handleSaveAs = () => {

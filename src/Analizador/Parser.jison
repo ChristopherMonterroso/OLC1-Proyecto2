@@ -15,6 +15,9 @@
     let While                       =   require("../Instrucciones/While").While;
     let Valor                       =   require("../Expresiones/Valor").Valor;
     let toLower                     =   require("../Instrucciones/toLower").toLower;
+    let toUpper                     =   require("../Instrucciones/toUpper").toUpper;
+    let Length                    =   require("../Instrucciones/Length").Length;
+    let TypeOf                    =   require("../Instrucciones/TypeOf").TypeOf;
 %}
 /* description: Parses end executes mathematical expressions. */
 
@@ -53,6 +56,9 @@ frac                        (?:\.[0-9]+)
 "void"                          {   return 'tvoid';     }
 "return"                        {   return 'treturn';   }
 "toLower"                       {   return 'ttolower';   }
+"toUpper"                       {   return 'ttoupper';   }
+"length"                       {   return 'ttlength';   }
+"typeof"                       {   return 'tttypeof';   }
 /* =================== EXPRESIONES REGULARES ===================== */
 ([a-zA-ZÑñ]|("_"[a-zA-ZÑñ]))([a-zA-ZÑñ]|[0-9]|"_")*             yytext = yytext.toLowerCase();          return 'id';
 \"(?:[{cor1}|{cor2}]|["\\"]["bnrt/["\\"]]|[^"["\\"])*\"         yytext = yytext.substr(1,yyleng-2);     return 'cadena';
@@ -152,6 +158,7 @@ SENTENCIA :     DECLARACION ';'             { $$ = $1; }
             |   LLAMADA_FUNCION  ';'        { $$ = $1; }
             |   WHILE                       { $$ = $1; }
             |   DO              ';'         { $$ = $1; }
+            
 ;
 
 DECLARACION : TIPO  id  '=' EXP 
@@ -162,10 +169,22 @@ DECLARACION : TIPO  id  '=' EXP
             {
                 $$ = new DeclararVariable($1, $2, undefined, @2.first_line, @2.first_column);
             }
-            | TIPO id '=' TOLOWER 
+            
+;
+
+ASIGNACION  :    id '=' EXP ';'
             {
-               $$ = new DeclararVariable($1, $2, $4, @2.first_line, @2.first_column);
+                $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
             }
+            | id '++' ';'
+            {
+                $$ = new Asignacion($1, $2, @1.first_line, @1.first_column);
+            }
+            | id '--' ';'
+            {
+                $$ = new Asignacion($1, $2, @1.first_line, @1.first_column);
+            }
+             
 ;
 
 TOLOWER : ttolower '(' EXP ')'
@@ -173,12 +192,21 @@ TOLOWER : ttolower '(' EXP ')'
             $$ = new toLower($3, @1.first_line, @1.first_column );
         }
 ;
+TOUPPER : ttoupper '(' EXP ')'
+        {
+            $$ = new toUpper($3, @1.first_line, @1.first_column );
+        }
+;
 
-ASIGNACION  :    id '=' EXP ';'
-            {
-                $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
-            }
-            
+LENGTH : ttlength '(' EXP ')'
+        {
+            $$ = new Length ($3, @1.first_line, @1.first_column );
+        }
+;
+TYPEOF : tttypeof '(' EXP ')'
+        {
+            $$ = new TypeOf($3, @1.first_line, @1.first_column );
+        }
 ;
 
 IF      :   tif '(' EXP ')' BLOQUE_SENTENCAS
@@ -213,6 +241,7 @@ DO      : tdo BLOQUE_SENTENCAS twhile '(' EXP ')'
             $$ = new While($5, $2, @1.first_line, @1.first_column );
         }
 ;
+
 
 FUNCION:        TIPO    id '(' LISTA_PARAM ')' BLOQUE_SENTENCAS
             {
@@ -279,6 +308,10 @@ LLAMADA_FUNCION     : id '(' LISTA_EXP ')'
 EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '-' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '*' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
+    |   TOLOWER                         { $$ = $1;}
+    |   TOUPPER                         { $$ = $1;}
+    |   LENGTH                          { $$ = $1;}
+    |   TYPEOF                          { $$ = $1;}
     |   EXP '/' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '%' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   '-' EXP %prec negativo          { $$ = new OperacionAritmetica(new Valor(0, "integer", @1.first_line, @1.first_column), $1, $2, @2.first_line, @2.first_column);}
@@ -294,7 +327,6 @@ EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $
     |   id                              { $$ = new AccesoVariable($1, @1.first_line, @1.first_column);        }
     |   LLAMADA_FUNCION                 { $$ = $1; }
     |   entero                          { $$ = new Valor($1, "integer", @1.first_line, @1.first_column); }
-
     |   decimal                         { $$ = new Valor($1, "double", @1.first_line, @1.first_column); }
     |   caracter                        { $$ = new Valor($1, "char", @1.first_line, @1.first_column);   }
     |   cadena                          { $$ = new Valor($1, "string", @1.first_line, @1.first_column); }
