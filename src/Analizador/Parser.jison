@@ -15,6 +15,7 @@
     let While                       =   require("../Instrucciones/While").While;
     let Valor                       =   require("../Expresiones/Valor").Valor;
     let toLower                     =   require("../Instrucciones/toLower").toLower;
+    let toString                     =   require("../Instrucciones/toString").toString;
     let toUpper                     =   require("../Instrucciones/toUpper").toUpper;
     let Length                    =   require("../Instrucciones/Length").Length;
     let TypeOf                    =   require("../Instrucciones/TypeOf").TypeOf;
@@ -57,7 +58,8 @@ frac                        (?:\.[0-9]+)
 "return"                        {   return 'treturn';   }
 "toLower"                       {   return 'ttolower';   }
 "toUpper"                       {   return 'ttoupper';   }
-"length"                       {   return 'ttlength';   }
+"toString"                       {   return 'ttoupper';   }
+"length"                       {   return 'ttoString';   }
 "typeof"                       {   return 'tttypeof';   }
 /* =================== EXPRESIONES REGULARES ===================== */
 ([a-zA-ZÑñ]|("_"[a-zA-ZÑñ]))([a-zA-ZÑñ]|[0-9]|"_")*             yytext = yytext.toLowerCase();          return 'id';
@@ -75,6 +77,7 @@ frac                        (?:\.[0-9]+)
 "*"                             {return '*';}
 "/"                             {return '/';}
 "%"                             {return '%';}
+"^"                             {return '^';}
 "("                             {return '(';}
 ")"                             {return ')';}
 "=="                            {return '==';}
@@ -197,6 +200,11 @@ TOUPPER : ttoupper '(' EXP ')'
             $$ = new toUpper($3, @1.first_line, @1.first_column );
         }
 ;
+TOSTRING : ttoString '(' EXP ')'
+        {
+            $$ = new toString($3, @1.first_line, @1.first_column );
+        }
+;
 
 LENGTH : ttlength '(' EXP ')'
         {
@@ -308,12 +316,14 @@ LLAMADA_FUNCION     : id '(' LISTA_EXP ')'
 EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '-' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '*' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
+    |   EXP '/' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
+    |   EXP '%' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
+    |   EXP '^' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
     |   TOLOWER                         { $$ = $1;}
     |   TOUPPER                         { $$ = $1;}
     |   LENGTH                          { $$ = $1;}
     |   TYPEOF                          { $$ = $1;}
-    |   EXP '/' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
-    |   EXP '%' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
+    |   TOSTRING                        { $$ = $1;}
     |   '-' EXP %prec negativo          { $$ = new OperacionAritmetica(new Valor(0, "integer", @1.first_line, @1.first_column), $1, $2, @2.first_line, @2.first_column);}
     |   '(' EXP ')'                     { $$ = $2;}
     |   EXP '=='  EXP                   { $$ = new OperacionRelacional($1, $2, $3, @2.first_line, @2.first_column);}

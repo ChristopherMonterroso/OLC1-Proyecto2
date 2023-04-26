@@ -39,6 +39,13 @@ export class TypeOf extends Expresion {
         this.tipo = new Tipo(TipoPrimitivo.String);
 
           return "double";
+      }else if ( prim1 == TipoPrimitivo.Char){
+        this.tipo = new Tipo(TipoPrimitivo.String);
+
+          return "char";
+      }else if ( prim1 == TipoPrimitivo.Boolean){
+        this.tipo = new Tipo(TipoPrimitivo.String);
+        return "boolean";
       }
   }
    

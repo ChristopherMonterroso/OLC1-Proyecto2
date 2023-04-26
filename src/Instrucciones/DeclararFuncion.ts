@@ -32,18 +32,7 @@ export class DeclararFuncion extends Instruccion {
             throw new Error("Función ya se encuentra definida en el entorno actual: " + this.linea + " , " + this.columna);
         }
 
-       /* for (let parametro of this.parametros) {
-            if(parametro instanceof DeclararVariable) {
-                
-                parametro.ejecutar(ambito_local,global,ast);
-            }
-        }
-        for (let sentencia of this.sentencias) {
-            if (sentencia instanceof Instruccion) sentencia.ejecutar(ambito_local, global, ast);
-           // if (sentencia instanceof Expresion) sentencia.getValor(ambito_local, global, ast);
-            
-            
-        }*/
+ 
         
         let nueva_func = new Funcion(this.nombre,this.parametros,this.sentencias)
         actual.insertarFuncion(this.nombre,nueva_func)

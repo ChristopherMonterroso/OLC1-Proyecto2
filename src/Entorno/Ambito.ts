@@ -11,6 +11,9 @@ export class Ambito {
         this.anterior = anterior;
         this.tabla_variables = new Map<string,   Variable>();
         this.tabla_funciones = new Map<string,   Funcion>();
+        let current = anterior;
+        
+ 
     }
 
     public insertarVariable(id :string, variable :Variable) {

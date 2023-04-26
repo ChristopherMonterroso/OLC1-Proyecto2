@@ -12,6 +12,7 @@ export class AccesoVariable extends Expresion{
     }
     
     public getValor(actual: Ambito, global: Ambito, ast: AST) {
+        console.log(actual)
         let variable = actual.getVariable(this.nombreVar);
 
         

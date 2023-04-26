@@ -22,9 +22,7 @@ export class Asignacion extends Instruccion {
         
         let variable = actual.getVariable(this.id);
         let funcion = actual.getFuncion(this.id);
-       
-        console.log(actual)
-        
+      console.log(funcion);
         if(variable === undefined) {
             // * ERROR *
             throw new Error("ERROR => No se ha definido la variable " + this.id);
