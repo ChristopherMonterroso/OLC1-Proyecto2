@@ -12,13 +12,18 @@
     let OperacionAritmetica         =   require("../Expresiones/OperacionAritmetica").OperacionAritmetica;
     let OperacionLogica             =   require("../Expresiones/OperacionLogica").OperacionLogica;
     let OperacionRelacional         =   require("../Expresiones/OperacionRelacional").OperacionRelacional;
+    let For                       =   require("../Instrucciones/For").For;
     let While                       =   require("../Instrucciones/While").While;
+    let DoWhile                     =   require("../Instrucciones/DoWhile").DoWhile;
     let Valor                       =   require("../Expresiones/Valor").Valor;
     let toLower                     =   require("../Instrucciones/toLower").toLower;
-    let toString                     =   require("../Instrucciones/toString").toString;
+    let toString                    =   require("../Instrucciones/toString").toString;
     let toUpper                     =   require("../Instrucciones/toUpper").toUpper;
-    let Length                    =   require("../Instrucciones/Length").Length;
-    let TypeOf                    =   require("../Instrucciones/TypeOf").TypeOf;
+    let Length                      =   require("../Instrucciones/Length").Length;
+    let TypeOf                      =   require("../Instrucciones/TypeOf").TypeOf;
+    let DeclararVector              =   require("../Instrucciones/DeclararVector").DeclararVector;
+    let DeclararLista               =   require("../Instrucciones/DeclararLista").DeclararLista;
+    let Inc_dec                     =   require("../Instrucciones/Incremento_decremento").Incremento_decremento;
 %}
 /* description: Parses end executes mathematical expressions. */
 
@@ -50,17 +55,24 @@ frac                        (?:\.[0-9]+)
 "boolean"                       {   return 'tboolean';  }
 "double"                        {   return 'tdouble';   }
 "String"                        {   return 'tstring';   }
+"char"                          {   return 'tchar';     }
 "if"                            {   return 'tif';       }
 "while"                         {   return 'twhile';    }
-"do"                            {   return 'tdo';    }
+"do"                            {   return 'tdo';       }
 "else"                          {   return 'telse';     }
 "void"                          {   return 'tvoid';     }
 "return"                        {   return 'treturn';   }
-"toLower"                       {   return 'ttolower';   }
-"toUpper"                       {   return 'ttoupper';   }
-"toString"                       {   return 'ttoupper';   }
-"length"                       {   return 'ttoString';   }
-"typeof"                       {   return 'tttypeof';   }
+"toLower"                       {   return 'ttolower';  }
+"toUpper"                       {   return 'ttoupper';  }
+"toString"                      {   return 'ttoString'; }
+"length"                        {   return 'ttlength';  }
+"typeof"                        {   return 'tttypeof';  }
+"for"                           {   return 'tfor';      }
+"new"                           {   return 'tnew';      }
+"list"                          {   return 'tlist';     }
+"add"                           {   return 'tadd';      }
+
+
 /* =================== EXPRESIONES REGULARES ===================== */
 ([a-zA-ZÑñ]|("_"[a-zA-ZÑñ]))([a-zA-ZÑñ]|[0-9]|"_")*             yytext = yytext.toLowerCase();          return 'id';
 \"(?:[{cor1}|{cor2}]|["\\"]["bnrt/["\\"]]|[^"["\\"])*\"         yytext = yytext.substr(1,yyleng-2);     return 'cadena';
@@ -95,8 +107,9 @@ frac                        (?:\.[0-9]+)
 "<"                             {return '<';}
 "{"                             {return '{';}
 "}"                             {return '}';}
-
-.                               {}
+"["                             {return '[';}
+"]"                             {return ']';}
+"."                             {return '.';}
 
 
 /lex
@@ -154,14 +167,38 @@ BLOQUE_SENTENCAS : '{' SENTENCIAS '}'
                 }
 ;
 
-SENTENCIA :     DECLARACION ';'             { $$ = $1; }
+SENTENCIA :     DECLARACION           ';'   { $$ = $1; }
+            |   INCREMENTO_DECREMENTO ';'   { $$ = $1; }
             |   FUNCION                     { $$ = $1; }
-            |   ASIGNACION                  { $$ = $1; }
             |   IF                          { $$ = $1; }
-            |   LLAMADA_FUNCION  ';'        { $$ = $1; }
+            |   LLAMADA_FUNCION     ';'     { $$ = $1; }
             |   WHILE                       { $$ = $1; }
-            |   DO              ';'         { $$ = $1; }
+            |   DO                  ';'     { $$ = $1; }
+            |   VECTOR              ';'     { $$ = $1; }
+            |   LISTA               ';'     { $$ = $1; }
+            |   FOR                         { $$ = $1; }
+            |   ASIGNACION                  { $$ = $1; }
             
+;
+
+LISTA   :    tlist '<' TIPO '>' id '=' tnew tlist '<' TIPO '>'
+            {
+                let lista = [];
+                $$ = new DeclararLista($3,$5,$010,0,lista,true,@5.first_line, @5.first_column);
+            }
+
+;
+
+VECTOR  :     TIPO '[' ']' id '=' tnew TIPO '[' entero ']'
+            {
+                let vector = [];
+                $$ = new DeclararVector($1,$4,$7,$9,vector,true,@4.first_line, @4.first_column);
+                
+            }
+            | TIPO '[' ']' id '=' '{' LISTA_EXP '}'
+            {
+                $$ = new DeclararVector($1,$4,$1,$7.length,$7,false,@4.first_line, @4.first_column);
+            }
 ;
 
 DECLARACION : TIPO  id  '=' EXP 
@@ -172,22 +209,20 @@ DECLARACION : TIPO  id  '=' EXP
             {
                 $$ = new DeclararVariable($1, $2, undefined, @2.first_line, @2.first_column);
             }
-            
 ;
 
 ASIGNACION  :    id '=' EXP ';'
             {
-                $$ = new Asignacion($1, $3, @1.first_line, @1.first_column);
-            }
-            | id '++' ';'
+                $$ = new Asignacion($1, $3, 0, false, false, @1.first_line, @1.first_column);
+            }        
+            | id '[' entero ']' '=' EXP ';'
             {
-                $$ = new Asignacion($1, $2, @1.first_line, @1.first_column);
+                $$ = new Asignacion($1, $6, $3, true, @1.first_line, @1.first_column);
             }
-            | id '--' ';'
+            | id '.' tadd '(' EXP ')' ';'
             {
-                $$ = new Asignacion($1, $2, @1.first_line, @1.first_column);
+                $$ = new Asignacion($1, $5, 0, false, true, @1.first_line, @1.first_column);
             }
-             
 ;
 
 TOLOWER : ttolower '(' EXP ')'
@@ -217,6 +252,7 @@ TYPEOF : tttypeof '(' EXP ')'
         }
 ;
 
+
 IF      :   tif '(' EXP ')' BLOQUE_SENTENCAS
         {
             $$ = new If($3, $5, [], @1.first_line, @1.first_column);
@@ -238,6 +274,23 @@ ELSE    :   telse IF
             $$ = $2;
         }
 ;
+FOR     : tfor '('ASIGNACION  EXP ';' id '++' ')' BLOQUE_SENTENCAS
+        {
+            $$ = new For($6, $4, $7, $9, @1.first_line, @1.first_column );
+        }
+        | tfor '('ASIGNACION  EXP ';' id '--' ')' BLOQUE_SENTENCAS
+        {
+            $$ = new For($6, $4, $7, $9, @1.first_line, @1.first_column );
+        }
+        | tfor '(' DECLARACION ';' EXP ';' id '--' ')' BLOQUE_SENTENCAS
+        {
+             $$ = new For($7, $5, $8, $10, @1.first_line, @1.first_column );
+        }
+        | tfor '(' DECLARACION ';' EXP ';' id '++' ')' BLOQUE_SENTENCAS
+        {
+             $$ = new For($7, $5,$8,$10, @1.first_line, @1.first_column );
+        }
+;
 
 WHILE   : twhile '(' EXP ')' BLOQUE_SENTENCAS
         {
@@ -246,10 +299,9 @@ WHILE   : twhile '(' EXP ')' BLOQUE_SENTENCAS
 ;
 DO      : tdo BLOQUE_SENTENCAS twhile '(' EXP ')' 
         {
-            $$ = new While($5, $2, @1.first_line, @1.first_column );
+            $$ = new DoWhile($5, $2, @1.first_line, @1.first_column );
         }
 ;
-
 
 FUNCION:        TIPO    id '(' LISTA_PARAM ')' BLOQUE_SENTENCAS
             {
@@ -273,6 +325,7 @@ FUNCION:        TIPO    id '(' LISTA_PARAM ')' BLOQUE_SENTENCAS
 TIPO    :       tinteger                    { $$ = new Tipo(TipoPrimitivo.Integer); }
         |       tboolean                    { $$ = new Tipo(TipoPrimitivo.Boolean); }
         |       tstring                     { $$ = new Tipo(TipoPrimitivo.String);  }
+        |       tchar                       { $$ = new Tipo(TipoPrimitivo.Char);    }
         |       tdouble                     { $$ = new Tipo(TipoPrimitivo.Double);  }
 ; 
 
@@ -303,7 +356,7 @@ LISTA_EXP : LISTA_EXP ',' EXP
         }
 ;
 
-LLAMADA_FUNCION     : id '(' LISTA_EXP ')' 
+LLAMADA_FUNCION : id '(' LISTA_EXP ')' 
                 { 
                     $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column);    
                 }
@@ -311,6 +364,16 @@ LLAMADA_FUNCION     : id '(' LISTA_EXP ')'
                 {
                     $$ = new LlamadaFuncion($1, [], @1.first_line, @1.first_column);
                 }
+;
+
+INCREMENTO_DECREMENTO : id '++' 
+                     {
+                        $$ = new Inc_dec($1,$2, @1.first_line, @1.first_column);
+                     }
+                    | id '--' 
+                    {
+                        $$ = new Inc_dec($1,$2, @1.first_line, @1.first_column);
+                    }
 ;
 
 EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $3, @2.first_line, @2.first_column);}
@@ -324,6 +387,7 @@ EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $
     |   LENGTH                          { $$ = $1;}
     |   TYPEOF                          { $$ = $1;}
     |   TOSTRING                        { $$ = $1;}
+    |   INCREMENTO_DECREMENTO           { $$ = $1;}
     |   '-' EXP %prec negativo          { $$ = new OperacionAritmetica(new Valor(0, "integer", @1.first_line, @1.first_column), $1, $2, @2.first_line, @2.first_column);}
     |   '(' EXP ')'                     { $$ = $2;}
     |   EXP '=='  EXP                   { $$ = new OperacionRelacional($1, $2, $3, @2.first_line, @2.first_column);}
@@ -334,12 +398,14 @@ EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $
     |   EXP '>='  EXP                   { $$ = new OperacionRelacional($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '&&'  EXP                   { $$ = new OperacionLogica($1, $2, $3, @2.first_line, @2.first_column);}
     |   EXP '||'  EXP                   { $$ = new OperacionLogica($1, $2, $3, @2.first_line, @2.first_column);}
-    |   id                              { $$ = new AccesoVariable($1, @1.first_line, @1.first_column);        }
+    |   id '[' entero ']'               { $$ = new AccesoVariable($1,$3, true, @1.first_line, @1.first_column);}
+    |   id '[' '[' entero ']' ']'       { $$ = new AccesoVariable($1,$4, true, @1.first_line, @1.first_column);}
+    |   id                              { $$ = new AccesoVariable($1,0, false, @1.first_line, @1.first_column);}
     |   LLAMADA_FUNCION                 { $$ = $1; }
-    |   entero                          { $$ = new Valor($1, "integer", @1.first_line, @1.first_column); }
-    |   decimal                         { $$ = new Valor($1, "double", @1.first_line, @1.first_column); }
-    |   caracter                        { $$ = new Valor($1, "char", @1.first_line, @1.first_column);   }
-    |   cadena                          { $$ = new Valor($1, "string", @1.first_line, @1.first_column); }
-    |   ttrue                           { $$ = new Valor($1, "true", @1.first_line, @1.first_column);   }
-    |   tfalse                          { $$ = new Valor($1, "false", @1.first_line, @1.first_column);  }
+    |   entero                          { $$ = new Valor($1, "integer", new Tipo(TipoPrimitivo.Integer), @1.first_line, @1.first_column);}
+    |   decimal                         { $$ = new Valor($1, "double", new Tipo(TipoPrimitivo.Double), @1.first_line, @1.first_column); }
+    |   caracter                        { $$ = new Valor($1, "char", $$ = new Tipo(TipoPrimitivo.Char), @1.first_line, @1.first_column);   }
+    |   cadena                          { $$ = new Valor($1, "string", $$ = new Tipo(TipoPrimitivo.String), @1.first_line, @1.first_column); }
+    |   ttrue                           { $$ = new Valor($1, "true", $$ = new Tipo(TipoPrimitivo.Boolean), @1.first_line, @1.first_column);   }
+    |   tfalse                          { $$ = new Valor($1, "false", $$ = new Tipo(TipoPrimitivo.Boolean), @1.first_line, @1.first_column);  }
 ;

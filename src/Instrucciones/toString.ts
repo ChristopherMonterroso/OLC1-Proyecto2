@@ -29,7 +29,7 @@ export class toLower extends Expresion {
        
           this.tipo = new Tipo(TipoPrimitivo.String);
 
-          return val1.toString().toLowerCase();
+          return val1.toString();
       
   }
 }

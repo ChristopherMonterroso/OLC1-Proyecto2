@@ -5,5 +5,8 @@ export enum TipoPrimitivo {
     String,
     Null,
     Boolean,
-    Void
+    Void,
+    Vector,
+    Lista,
+    Variable
 }

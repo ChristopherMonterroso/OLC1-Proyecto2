@@ -9,12 +9,17 @@ export class Asignacion extends Instruccion {
 
     id:     string;
     exp:    Expresion;
+    posicion: number;
+    key: boolean;
+    key2: boolean;
 
-    constructor(id: string, exp: Expresion, linea: number, columna: number) {
-        
+    constructor(id: string, exp: Expresion, posicion:number, key:boolean, key2:boolean,linea: number, columna: number) {
         super(linea, columna);
         this.id = id;
         this.exp = exp;
+        this.posicion=posicion;
+        this.key=key;
+        this.key2=key2;
     }
 
 
@@ -22,30 +27,36 @@ export class Asignacion extends Instruccion {
         
         let variable = actual.getVariable(this.id);
         let funcion = actual.getFuncion(this.id);
-      console.log(funcion);
+     
         if(variable === undefined) {
             // * ERROR *
             throw new Error("ERROR => No se ha definido la variable " + this.id);
         }
     
        
-        if(this.exp==='++'){
-            variable.valor = variable.valor + 1;
-            variable.asignarValor(variable.valor);
+        
+        if(this.key){
+            if(variable.tipo.tipo!==this.exp.tipo.tipo){
+                throw new Error("ERROR => El tipo del valor asignado no corresponde a la variable " + this.id);
+            }
+            variable.asignarValorVector(this.posicion,this.exp)
             return
         }
-        if(this.exp==='--'){
-            variable.valor = variable.valor - 1;
-            variable.asignarValor(variable.valor);
+        if(this.key2){
+            if(variable.tipo.tipo!==this.exp.tipo.tipo){
+                throw new Error("ERROR => El tipo del valor asignado no corresponde a la variable " + this.id);
+            }
+            variable.asignarValorLista(this.exp)
             return
         }
+
         let valor_asig = this.exp.getValor(actual, global, ast);
         
         if(variable.getTipo().getPrimitivo() != this.exp.tipo.getPrimitivo()) {
             throw new Error("ERROR => El tipo del valor asignado no corresponde a la variable " + this.id);
         }
-
         variable.asignarValor(valor_asig);
+
 
     }
 
