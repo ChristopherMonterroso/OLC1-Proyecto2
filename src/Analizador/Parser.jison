@@ -24,6 +24,7 @@
     let DeclararVector              =   require("../Instrucciones/DeclararVector").DeclararVector;
     let DeclararLista               =   require("../Instrucciones/DeclararLista").DeclararLista;
     let Inc_dec                     =   require("../Instrucciones/Incremento_decremento").Incremento_decremento;
+    let Err                         =   require("../Data/Errores").Err;
 %}
 /* description: Parses end executes mathematical expressions. */
 
@@ -111,6 +112,11 @@ frac                        (?:\.[0-9]+)
 "]"                             {return ']';}
 "."                             {return '.';}
 
+. {
+    {
+        Err.agregarALista("Carácter desconocido: "+yytext," error léxico",yylloc.first_line,yylloc.first_column);
+    }
+}
 
 /lex
 
@@ -178,8 +184,9 @@ SENTENCIA :     DECLARACION           ';'   { $$ = $1; }
             |   LISTA               ';'     { $$ = $1; }
             |   FOR                         { $$ = $1; }
             |   ASIGNACION                  { $$ = $1; }
-            
-;
+            | error  {  Err.agregarALista("Error de analisis: "+yytext,"syntax error",this._$.first_line,this._$.first_column) ;
+                }
+;                   
 
 LISTA   :    tlist '<' TIPO '>' id '=' tnew tlist '<' TIPO '>'
             {

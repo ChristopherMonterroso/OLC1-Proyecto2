@@ -41,7 +41,7 @@ function Editores() {
     }else{
       setNonEditableText("Error al analizar");
     }
-    //console.log(treeContent.content)
+    console.log(treeContent.content)
   };
   //Funcion para guardar el editable text en un archivo y descargarlo
   const handleSaveAs = () => {

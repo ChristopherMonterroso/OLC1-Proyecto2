@@ -41,7 +41,7 @@ export class Raiz {
                 }
             }
 
-            this.graphiz()
+            console.log(this.graphiz())
 
         } catch (ex) {
             ast.escribirConsola("ERROR => ");

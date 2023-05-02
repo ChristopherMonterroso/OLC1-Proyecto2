@@ -8,11 +8,12 @@ export class Valor extends Expresion {
     
     valor       : string;
     tipo_valor  : string;
-
-    constructor(valor :string, tipo_valor :string, linea :number, columna :number ) {
+    tipo: Tipo;
+    constructor(valor :string, tipo_valor :string,tipo: Tipo, linea :number, columna :number ) {
         super(linea, columna);
         this.valor = valor;
         this.tipo_valor = tipo_valor;
+        this.tipo=tipo;
     }
     
     public getValor(actual: Ambito, global: Ambito, ast: AST) {

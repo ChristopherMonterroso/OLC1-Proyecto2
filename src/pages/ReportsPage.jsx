@@ -1,7 +1,15 @@
-import { treeContent } from "../Data/dataTree";
 
+import ErrorTable from "../components/tableError/table";
 const ReportPage = () => {
-    return <h1>{}</h1>;
+
+
+  return (
+    <>
+      <h1>ERRORES</h1>
+      <ErrorTable />
+    </>
+   
+  );
 };
 
 export default ReportPage;

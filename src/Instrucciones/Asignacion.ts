@@ -42,6 +42,8 @@ export class Asignacion extends Instruccion {
             variable.asignarValorVector(this.posicion,this.exp)
             return
         }
+        console.log(variable)
+        console.log(this.exp)
         if(this.key2){
             if(variable.tipo.tipo!==this.exp.tipo.tipo){
                 throw new Error("ERROR => El tipo del valor asignado no corresponde a la variable " + this.id);

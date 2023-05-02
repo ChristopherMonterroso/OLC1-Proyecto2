@@ -127,16 +127,16 @@ const linksArray = [
         to: "/Editor",
         notification: 0,
     },
-    /*{
-        label: "Compilador",
-        icon: <BsPeople />,
-        to: "/Compiler",
-        notification: 0,
-    },*/
     {
-        label: "Reportes",
+        label: "Arbol",
+        icon: <BsPeople />,
+        to: "/Arbol",
+        notification: 0,
+    },
+    {
+        label: "Errores",
         icon: <AiOutlineApartment />,
-        to: "/Reports",
+        to: "/Errores",
         notification: 0,
     },
 ];
@@ -146,10 +146,10 @@ const secondaryLinksArray = [
         //label: "Settings",
         //icon: <AiOutlineSetting />,
     },*/
-    {
+    /*{
         label: "Logout",
         icon: <MdLogout />,
-    },
+    },*/
 ];
 
 export default Sidebar;

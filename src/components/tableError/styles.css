@@ -1,0 +1,29 @@
+
+h1{
+
+    margin-bottom: 20px;
+}
+.error-table {
+   
+    margin: 0 auto; /* Centrar la tabla horizontalmente */
+    border-collapse: collapse; /* Colapsar los bordes de la tabla */
+  }
+  
+  th, td {
+    border: 1px solid black; /* Añadir borde a las celdas */
+    padding: 8px; /* Añadir espacio dentro de las celdas */
+    text-align: center; /* Alinear el texto a la izquierda */
+  }
+  
+  th {
+    background-color: #ddd; /* Añadir color de fondo a los encabezados de columna */
+    font-weight: bold; /* Hacer el texto del encabezado de columna en negrita */
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2; /* Añadir color de fondo a las filas pares */
+  }
+  
+  tr:hover {
+    background-color: #ddd; /* Cambiar el color de fondo de la fila al pasar el cursor */
+  }
