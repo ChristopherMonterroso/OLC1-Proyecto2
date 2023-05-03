@@ -24,6 +24,8 @@
     let DeclararVector              =   require("../Instrucciones/DeclararVector").DeclararVector;
     let DeclararLista               =   require("../Instrucciones/DeclararLista").DeclararLista;
     let Inc_dec                     =   require("../Instrucciones/Incremento_decremento").Incremento_decremento;
+    let Truncate                    =   require("../Instrucciones/Truncate").Truncate;
+    let Round                    =   require("../Instrucciones/Round").Round;
     let Err                         =   require("../Data/Errores").Err;
 %}
 /* description: Parses end executes mathematical expressions. */
@@ -72,6 +74,8 @@ frac                        (?:\.[0-9]+)
 "new"                           {   return 'tnew';      }
 "list"                          {   return 'tlist';     }
 "add"                           {   return 'tadd';      }
+"truncate"                      {   return 'ttruncate'; }
+"round"                         {   return 'tround';    }
 
 
 /* =================== EXPRESIONES REGULARES ===================== */
@@ -230,6 +234,18 @@ ASIGNACION  :    id '=' EXP ';'
             {
                 $$ = new Asignacion($1, $5, 0, false, true, @1.first_line, @1.first_column);
             }
+;
+
+TRUNCATE : ttruncate '(' EXP ')'
+        {
+            $$ = new Truncate($3, @1.first_line, @1.first_column );
+        }
+;
+
+ROUND : tround '(' EXP ')'
+        {
+            $$ = new Round($3, @1.first_line, @1.first_column );
+        }
 ;
 
 TOLOWER : ttolower '(' EXP ')'
@@ -395,6 +411,8 @@ EXP :   EXP '+' EXP                     { $$ = new OperacionAritmetica($1, $2, $
     |   TYPEOF                          { $$ = $1;}
     |   TOSTRING                        { $$ = $1;}
     |   INCREMENTO_DECREMENTO           { $$ = $1;}
+    |   TRUNCATE                        { $$ = $1;}
+    |   ROUND                           { $$ = $1;}
     |   '-' EXP %prec negativo          { $$ = new OperacionAritmetica(new Valor(0, "integer", @1.first_line, @1.first_column), $1, $2, @2.first_line, @2.first_column);}
     |   '(' EXP ')'                     { $$ = $2;}
     |   EXP '=='  EXP                   { $$ = new OperacionRelacional($1, $2, $3, @2.first_line, @2.first_column);}

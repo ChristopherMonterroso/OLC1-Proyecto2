@@ -4,14 +4,15 @@ import HomePage from "./pages/HomePage";
 import EditorPage from "./pages/EditorPage";
 import ReportPage from "./pages/ReportsPage";
 import TreePage from "./pages/TreePage";
+import SimbolosPage from "./pages/simbolos";
 const Routes = () => {
     return (
         <Switch>
             <Route exact path="/Home">
-                <HomePage />
-            </Route>
-            <Route exact path="/Editor">
                 <EditorPage />
+            </Route>
+            <Route exact path="/Simbolos">
+                <SimbolosPage />
             </Route>
             <Route exact path="/Arbol">
                  <TreePage/>

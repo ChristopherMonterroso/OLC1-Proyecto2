@@ -22,23 +22,34 @@ export class For extends Instruccion{
 
     public ejecutar(actual: Ambito, global: Ambito, ast: AST) {
         let val_cond = this.exp.getValor(actual, global, ast);
-        console.log(this.variable)
-        console.log(this.signo)
-        console.log(val_cond)
+
 
         let ambito_local = new Ambito(actual);
         let contador=actual.getVariable(this.variable)
-       
-
-         while(val_cond) 
-        {
-             for(let sentencia of this.sentencias){
-                 if(sentencia instanceof Instruccion) sentencia.ejecutar(ambito_local, global, ast);
-                 if(sentencia instanceof Expresion) sentencia.getValor(ambito_local, global, ast);
-             }
-             contador.asignarValor( contador.valor+1)
-             val_cond = this.exp.getValor(actual, global, ast);
+       console.log(contador)
+        if( this.signo=="++"){
+            while(val_cond) 
+            {
+                 for(let sentencia of this.sentencias){
+                     if(sentencia instanceof Instruccion) sentencia.ejecutar(ambito_local, global, ast);
+                     if(sentencia instanceof Expresion) sentencia.getValor(ambito_local, global, ast);
+                 }
+                 contador.asignarValor( contador.valor+1)
+                 val_cond = this.exp.getValor(actual, global, ast);
+            }
+        }if(this.signo=="--"){
+            console.log("ez")
+            while(val_cond) 
+            {
+                 for(let sentencia of this.sentencias){
+                     if(sentencia instanceof Instruccion) sentencia.ejecutar(ambito_local, global, ast);
+                     if(sentencia instanceof Expresion) sentencia.getValor(ambito_local, global, ast);
+                 }
+                 contador.asignarValor( contador.valor-1)
+                 val_cond = this.exp.getValor(actual, global, ast);
+            }
         }
+        
     }
 
 }

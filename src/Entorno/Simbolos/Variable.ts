@@ -1,21 +1,28 @@
-import { Valor } from "../../Expresiones/Valor";
 import { Tipo } from "./Tipo";
-import { TipoPrimitivo } from "./TipoPrimitivo";
+import { Valor } from "../../Expresiones/Valor";
 
+import { TipoPrimitivo } from "./TipoPrimitivo";
 export class Variable {
 
     tipo:   Tipo;
     id:     string;
     valor:  any;
+    ambito: any;
+    linea:  number;
+    columna:number;
     tipoVariable: Tipo;
 
-    constructor(tipo:Tipo, tipoVariable:Tipo, id:string, valor:any) {
+    constructor(tipo:Tipo, tipoVariable:Tipo, id:string, valor:any,ambito:any, linea:number, columna:number) {
         this.tipo   = tipo;
         this.id     = id;
         this.valor  = valor;
-        this.tipoVariable=tipoVariable
+        this.ambito = ambito;
+        this.linea  = linea;
+        this.columna= columna;
+        this.tipoVariable = tipoVariable;
     }
 
+   
     public asignarValor(valor: any){
         this.valor = valor;
     }

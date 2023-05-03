@@ -25,10 +25,11 @@ import {
     AiOutlineLeft,
     AiOutlineSearch,
     AiOutlineSetting,
+   
 } from "react-icons/ai";
-import { MdLogout, MdOutlineAnalytics } from "react-icons/md";
-import { BsPeople } from "react-icons/bs";
-
+import {  MdOutlineAnalytics } from "react-icons/md";
+import { TbBinaryTree } from "react-icons/tb";
+import { MdError } from "react-icons/md";
 import { ThemeContext } from "./../../App";
 import { useLocation } from "react-router-dom";
 
@@ -97,7 +98,7 @@ const Sidebar = () => {
                 </SLinkContainer>
             ))}
             <SDivider />
-            <STheme>
+            {/*<STheme>
                 {sidebarOpen && <SThemeLabel>Dark Mode</SThemeLabel>}
                 <SThemeToggler
                     isActive={theme === "dark"}
@@ -109,7 +110,7 @@ const Sidebar = () => {
                 >
                     <SToggleThumb style={theme === "dark" ? { right: "1px" } : {}} />
                 </SThemeToggler>
-            </STheme>
+            </STheme>*/}
         </SSidebar>
     );
 };
@@ -122,20 +123,20 @@ const linksArray = [
         notification: 0,
     },
     {
-        label: "Editor",
+        label: "Simbolos",
         icon: <MdOutlineAnalytics />,
-        to: "/Editor",
+        to: "/Simbolos",
         notification: 0,
     },
     {
         label: "Arbol",
-        icon: <BsPeople />,
+        icon: <TbBinaryTree />,
         to: "/Arbol",
         notification: 0,
     },
     {
         label: "Errores",
-        icon: <AiOutlineApartment />,
+        icon: <MdError />,
         to: "/Errores",
         notification: 0,
     },

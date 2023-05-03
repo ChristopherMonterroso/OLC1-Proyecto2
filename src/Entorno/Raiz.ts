@@ -41,7 +41,7 @@ export class Raiz {
                 }
             }
 
-            console.log(this.graphiz())
+            this.graphiz()
 
         } catch (ex) {
             ast.escribirConsola("ERROR => ");
@@ -135,8 +135,40 @@ export class Raiz {
             this.idNode+=1;
 
         }else if(nombre==="AccesoVariable"){
-            this.nodes += `S_AccesoVariable${idNode}[label="${sentencia.nombreVar}" fillcolor="${this.fillcolor}" style=filled];\n`
-            this.connections += `${nodoPadre} -> S_AccesoVariable${idNode} [color="${this.color}"];\n`;
+            if(sentencia.key){
+                this.nodes += `S_AccesoVariable${idNode}[label="${sentencia.nombreVar}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_ci1${idNode}[label="[" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_ci1${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_posv${idNode}[label="${sentencia.posicionVector}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_posv${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_cd1${idNode}[label="]" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_cd1${idNode} [color="${this.color}"];\n`;
+            }else if(sentencia.key2){
+                this.nodes += `S_AccesoVariable${idNode}[label="${sentencia.nombreVar}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_ci1${idNode}[label="[" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_ci1${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_ci2${idNode}[label="[" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_ci2${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_id${idNode}[label="${sentencia.posicionVector}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_id${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_cd1${idNode}[label="]" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_cd1${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_AccesoVariable_cd2${idNode}[label="]" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable_cd2${idNode} [color="${this.color}"];\n`;
+            }else{
+                this.nodes += `S_AccesoVariable${idNode}[label="${sentencia.nombreVar}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `${nodoPadre} -> S_AccesoVariable${idNode} [color="${this.color}"];\n`;
+            }
             this.idNode+=1;
         }else if(nombre==="Valor"){
             this.nodes += `S_Valor${idNode}[label="${sentencia.valor}" fillcolor="${this.fillcolor}" style=filled];\n`
@@ -181,10 +213,38 @@ export class Raiz {
             }else if(sentencia.exp==="--"){
                 this.nodes += `S_Asignacion_menos${idNode}[label="--" fillcolor="${this.fillcolor}" style=filled];\n`
                 this.connections += `S_Asignacion${idNode} -> S_Asignacion_menos${idNode} [color="${this.color}"];\n`;
-            }else{
+            }else if(sentencia.key){
+                this.nodes += `S_Asignacion_ci1${idNode}[label="[" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_ci1${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_Asignacion_num1${idNode}[label="${sentencia.posicion}" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_num1${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_Asignacion_cd1${idNode}[label="]" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_cd1${idNode} [color="${this.color}"];\n`;
+
                 this.nodes += `S_Asignacion_igual${idNode}[label="=" fillcolor="${this.fillcolor}" style=filled];\n`
                 this.connections += `S_Asignacion${idNode} -> S_Asignacion_igual${idNode} [color="${this.color}"];\n`;
 
+                this.auxiliarRecursiveGraphiz(sentencia.exp,"S_Asignacion"+idNode)
+
+            }else if(sentencia.key2){
+                this.nodes += `S_Asignacion_punto${idNode}[label="." fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_punto${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_Asignacion_add${idNode}[label="add" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_add${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_Asignacion_pi${idNode}[label="(" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_pi${idNode} [color="${this.color}"];\n`;
+
+                this.auxiliarRecursiveGraphiz(sentencia.exp,"S_Asignacion"+idNode);
+
+                this.nodes += `S_Asignacion_pd${idNode}[label=")" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_pd${idNode} [color="${this.color}"];\n`;
+            }else{
+                this.nodes += `S_Asignacion_igual${idNode}[label="=" fillcolor="${this.fillcolor}" style=filled];\n`
+                this.connections += `S_Asignacion${idNode} -> S_Asignacion_igual${idNode} [color="${this.color}"];\n`;
                 this.auxiliarRecursiveGraphiz(sentencia.exp,"S_Asignacion"+idNode);
             }
             
@@ -241,7 +301,7 @@ export class Raiz {
             this.nodes += `S_While_pi${idNode}[label="(" fillcolor="${this.fillcolor}" style=filled];\n`
             this.connections += `S_While${idNode} -> S_While_pi${idNode} [color="${this.color}"];\n`;
 
-            this.auxiliarRecursiveGraphiz(sentencia.exp,idNode)
+            this.auxiliarRecursiveGraphiz(sentencia.exp,"S_While"+idNode)
 
             this.nodes += `S_While_pd${idNode}[label=")" fillcolor="${this.fillcolor}" style=filled];\n`
             this.connections += `S_While${idNode} -> S_While_pd${idNode} [color="${this.color}"];\n`;
@@ -356,9 +416,133 @@ export class Raiz {
             this.nodes += `S_toString_pd${idNode}[label=")" fillcolor="${this.fillcolor}" style=filled];\n`
             this.connections += `S_toString${idNode} -> S_toString_pd${idNode} [color="${this.color}"];\n`
             this.idNode+=1;
+        }else if(nombre==="DeclararLista"){
+            const clave1: string = Object.keys(TipoPrimitivo).find(key => TipoPrimitivo[key] === sentencia.tipo1.tipo) || '';
+            const clave2: string = Object.keys(TipoPrimitivo).find(key => TipoPrimitivo[key] === sentencia.tipo2.tipo) || '';
+            this.nodes += `S_DeclararLista${idNode}[label="DeclararLista" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `${nodoPadre} -> S_DeclararLista${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_lista1${idNode}[label="list" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_lista1${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_menor1${idNode}[label="<" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_menor1${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_tipo1${idNode}[label="${clave1}" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_tipo1${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_mayor1${idNode}[label=">" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_mayor1${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_nombre${idNode}[label="${sentencia.nombre}" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_nombre${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_igual${idNode}[label="=" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_igual${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_new${idNode}[label="new" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_new${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_lista2${idNode}[label="list" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_lista2${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_menor2${idNode}[label="<" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_menor2${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_tipo2${idNode}[label="${clave2}" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_tipo2${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_mayor2${idNode}[label=">" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_mayor2${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararLista_pc${idNode}[label=";" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararLista${idNode} -> S_DeclararLista_pc${idNode} [color="${this.color}"];\n`;
+            this.idNode+=1;
+        }else if(nombre==="DeclararVector"){
+            const clave1: string = Object.keys(TipoPrimitivo).find(key => TipoPrimitivo[key] === sentencia.tipo1.tipo) || '';
+            const clave2: string = Object.keys(TipoPrimitivo).find(key => TipoPrimitivo[key] === sentencia.tipo2.tipo) || '';
+            this.nodes += `S_DeclararVector${idNode}[label="DeclararVector" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `${nodoPadre} -> S_DeclararVector${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararVector_tipo1${idNode}[label="${clave1}" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_tipo1${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararVector_ci1${idNode}[label="[" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_ci1${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararVector_cd1${idNode}[label="]" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_cd1${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararVector_nombre${idNode}[label="${sentencia.nombre}" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_nombre${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_DeclararVector_igual${idNode}[label="=" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_igual${idNode} [color="${this.color}"];\n`;
+            if(sentencia.estado){
+                this.nodes += `S_DeclararVector_new${idNode}[label="new" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_new${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_DeclararVector_tipo2${idNode}[label="${clave2}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_tipo2${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_DeclararVector_ci2${idNode}[label="[" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_ci2${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_DeclararVector_n${idNode}[label="${sentencia.tamaño}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_n${idNode} [color="${this.color}"];\n`;
+
+                this.nodes += `S_DeclararVector_cd2${idNode}[label="]" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_cd2${idNode} [color="${this.color}"];\n`;
+            }else{
+                this.nodes += `S_DeclararVector_li${idNode}[label="{" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_li${idNode} [color="${this.color}"];\n`;
+
+                this.forRecursiveGraphiz(sentencia.contenido,"S_DeclararVector"+idNode,true)
+
+                this.nodes += `S_DeclararVector_ld${idNode}[label="}" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_ld${idNode} [color="${this.color}"];\n`;
+            }
+
+                this.nodes += `S_DeclararVector_pc${idNode}[label=";" fillcolor="${this.fillcolor}" style=filled];\n`;
+                this.connections += `S_DeclararVector${idNode} -> S_DeclararVector_pc${idNode} [color="${this.color}"];\n`;
+            
+            this.idNode+=1;
+        }else if(nombre==="Truncate"){
+            this.nodes += `S_Truncate${idNode}[label="Truncate" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `${nodoPadre} -> S_Truncate${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Truncate_nombre${idNode}[label="Truncate" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Truncate${idNode} -> S_Truncate_nombre${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Truncate_pi${idNode}[label="(" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Truncate${idNode} -> S_Truncate_pi${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Truncate_valor${idNode}[label="${sentencia.exp1.valor}" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Truncate${idNode} -> S_Truncate_valor${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Truncate_pd${idNode}[label=")" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Truncate${idNode} -> S_Truncate_pd${idNode} [color="${this.color}"];\n`;
+            this.idNode+=1;
+        }else if(nombre==="Round"){
+            this.nodes += `S_Round${idNode}[label="Round" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `${nodoPadre} -> S_Round${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Round_nombre${idNode}[label="Round" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Round${idNode} -> S_Round_nombre${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Round_pi${idNode}[label="(" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Round${idNode} -> S_Round_pi${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Round_valor${idNode}[label="${sentencia.exp1.valor}" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Round${idNode} -> S_Round_valor${idNode} [color="${this.color}"];\n`;
+
+            this.nodes += `S_Round_pd${idNode}[label=")" fillcolor="${this.fillcolor}" style=filled];\n`;
+            this.connections += `S_Round${idNode} -> S_Round_pd${idNode} [color="${this.color}"];\n`;
+            this.idNode+=1;
         }else{
-            //console.log(nombre)
-            //console.log(sentencia) 
+        
+            console.log(nombre)
+            console.log(sentencia) 
 
             // this.nodes += `S_DeclararFuncion${idNode}[label="DeclararFuncion" fillcolor="${this.fillcolor}" style=filled];\n`;
 

@@ -5,7 +5,7 @@ h1{
 }
 .error-table {
    
-    margin: 0 auto; /* Centrar la tabla horizontalmente */
+    margin: 0 450px; /* Centrar la tabla horizontalmente */
     border-collapse: collapse; /* Colapsar los bordes de la tabla */
   }
   

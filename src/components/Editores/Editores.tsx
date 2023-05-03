@@ -4,6 +4,7 @@ import { Analizador } from '../../Analizador/Analizador';
 import { AST } from '../../Entorno/AST';
 import { readFileSync } from "fs";
 import  {treeContent} from '../../Data/dataTree.js';
+import { Ambito } from '../../Entorno/Ambito';
 function Editores() {
   
   const [editableText, setEditableText] = useState('');
@@ -33,15 +34,16 @@ function Editores() {
     let analizador = new Analizador(cadena_codigo, "editor");
    
     let ast: AST = analizador.Analizar();
-    //console.log(ast.getSalida());
-    //ast.printNodos();
+    console.log("Identificador | Tipo | Tipo | Entorno | Linea ")
+    console.log(Ambito.metodos1)
+    console.log(Ambito.variables1)
 
     if(ast != undefined) {
       setNonEditableText(ast.getSalida());
     }else{
       setNonEditableText("Error al analizar");
     }
-    console.log(treeContent.content)
+ 
   };
   //Funcion para guardar el editable text en un archivo y descargarlo
   const handleSaveAs = () => {

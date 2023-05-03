@@ -31,10 +31,9 @@ export class DeclararFuncion extends Instruccion {
             // * ERROR *
             throw new Error("Función ya se encuentra definida en el entorno actual: " + this.linea + " , " + this.columna);
         }
-
- 
+      
         
-        let nueva_func = new Funcion(this.nombre,this.parametros,this.sentencias)
+        let nueva_func = new Funcion(this.nombre,this.parametros,this.sentencias,this.tipo,this.linea,this.columna)
         actual.insertarFuncion(this.nombre,nueva_func)
 
        
